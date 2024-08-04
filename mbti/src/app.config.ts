@@ -1,5 +1,6 @@
 export default defineAppConfig({
   pages: [
+    'pages/questions/index',
     'pages/index/index'
   ],
   window: {

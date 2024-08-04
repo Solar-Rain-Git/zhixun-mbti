@@ -28,7 +28,7 @@ export default () => {
         <View className="at-article__h2 subtitle">
           只需10分钟，就能“惊人般准确”地描述出你是谁，以及你为何以这样的方式行事。
         </View>
-        <AtButton type="primary" circle className="btn-primary">
+        <AtButton type="primary" circle className="btn_primary btn_join">
           参加测试
         </AtButton>
       </View>
@@ -37,7 +37,7 @@ export default () => {
         <AtModalContent>
           <Image src={logo} className="login_logo" />
           <View className="at-article__info login_info">登陆后可继续当前操作</View>
-          <AtButton type="primary" circle className="btn_login">
+          <AtButton type="primary" circle className="btn_primary">
             微信手机号 一键登录
           </AtButton>
         </AtModalContent>

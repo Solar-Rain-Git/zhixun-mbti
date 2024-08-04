@@ -1,0 +1,17 @@
+@import "../../app.scss";
+
+.questionPage {
+  .title {
+    padding-bottom: 15rpx;
+  }
+
+  .do_btn {;
+    padding: 20rpx 10rpx 0;
+    display: flex;
+
+    .control_btn {
+      width: 100%;
+      margin: 20rpx;
+    }
+  }
+}

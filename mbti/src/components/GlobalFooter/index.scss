@@ -1,21 +1,16 @@
-$bg: "../../assets/header-mountains-mobile.svg";
 .global_footer {
   height: 40vh;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background-image: url(#{$bg});
-  background-repeat: no-repeat;
-  background-position: bottom;
+
+  .footer_picture {
+    width: 100%;
+  }
 
   .copyright {
-    position: inherit;
-    bottom: 15rpx;
-    left: 0;
-    right: 0;
     text-align: center;
     font-style: italic;
-    color: #6a6a6a;
   }
 }

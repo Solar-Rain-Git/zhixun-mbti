@@ -1,14 +1,15 @@
-$logo: "../../assets/logo.svg";
+@import "../../app.scss";
+
 .index_page {
-  height: 100vh;
-  background-color: #4298B4;
+  height: 80vh;
+  background-color: $theme-color;
 
   .index_head {
     display: flex;
     justify-content: space-between;
     padding: 0 0 10rpx 10rpx;
     height: 100rpx;
-    background-color: #ffffff;
+    background-color: $white;
     clip-path: polygon(50% 0%, 100% 0, 100% 35%, 110% 100%, 73% 65%, 50% 100%, 24% 67%, 0 100%, 0% 35%, 0 0);
 
     .index_logo {
@@ -25,8 +26,8 @@ $logo: "../../assets/logo.svg";
       text-align: center;
       font-size: 50rpx;
       font-weight: bold;
-      color: #fff;
-      background-color: #4298B4;
+      color: $white;
+      background-color: $theme-color;
       clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 61%);
     }
 
@@ -38,39 +39,33 @@ $logo: "../../assets/logo.svg";
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 60vh;
+    height: 50vh;
 
     .title {
-      color: #fff;
+      color: $white;
       font-weight: bold;
       padding-top: 20rpx;
     }
 
     .subtitle {
-      color: #fff;
+      color: $white;
       font-size: medium;
       font-weight: 500;
     }
 
-    .btn-primary {
-      background-color: #88619A;
+    .btn_join {
       width: 50%;
       margin-top: 20rpx;
     }
   }
 
-  .login_logo{
+  .login_logo {
     width: 100%;
     height: 120rpx;
   }
 
-  .login_info{
+  .login_info {
     text-align: center;
     padding-bottom: 20rpx;
-  }
-
-  .btn_login{
-    border: none;
-    background-color: #88619A;
   }
 }
