@@ -1,0 +1,82 @@
+@import "../../app.scss";
+
+.resultPage {
+  background-color: $theme-color;
+
+  .result_head {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0 20rpx 0;
+    height: 70rpx;
+
+    .title {
+      margin: 0;
+      height: inherit;
+      line-height: 70rpx;
+      font-weight: normal;
+    }
+
+    .home_icon, .login_icon {
+      width: 100rpx;
+      height: inherit;
+      line-height: inherit;
+      text-align: center;
+      font-size: 50rpx;
+      font-weight: bold;
+    }
+  }
+
+  .container {
+    padding: 0 10rpx 0;
+    height: 80vh;
+
+    .roleInfo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 50vh;
+
+      .roleImg {
+        width: 100%;
+        height: 40%;
+        margin-top: 30rpx;
+        z-index: 1
+      }
+
+      .roleName {
+        font-weight: bold;
+      }
+
+      .desc {
+        color: #787f8d;
+        font-weight: normal;
+        padding: 0 25rpx 0;
+      }
+
+      .roleCategory {
+        width: 100%;
+        text-align: center;
+        color: $white;
+        font-weight: bold;
+        font-size: 200rpx;
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+
+  }
+
+  .login_logo {
+    width: 100%;
+    height: 120rpx;
+  }
+
+  .login_info {
+    text-align: center;
+    padding-bottom: 20rpx;
+  }
+}
