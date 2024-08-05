@@ -1,5 +1,6 @@
 import { View } from "@tarojs/components";
 import { AtRadio, AtButton } from "taro-ui";
+import Taro from "@tarojs/taro";
 import { useEffect, useState } from "react";
 import "taro-ui/dist/style/components/article.scss";
 import "taro-ui/dist/style/components/radio.scss";
@@ -71,7 +72,9 @@ export default () => {
             className="control_btn btn_primary"
             disabled={!currentAnswer}
             onClick={() => {
-              // TODO: 跳转到测试结果页面
+              Taro.redirectTo({
+                url: "/pages/result/index",
+              });
             }}
           >
             查看结果

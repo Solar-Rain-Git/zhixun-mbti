@@ -1,3 +1,3 @@
 export default definePageConfig({
-  // navigationBarTitleText: 'MBTI测试问题'
+  navigationBarTitleText: 'MBTI 问题测试'
 })

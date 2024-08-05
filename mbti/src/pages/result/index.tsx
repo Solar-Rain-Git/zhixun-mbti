@@ -1,5 +1,6 @@
 import { View, Image } from "@tarojs/components";
 import { AtButton, AtModal, AtModalContent } from "taro-ui";
+import Taro from "@tarojs/taro";
 import { useState } from "react";
 import "taro-ui/dist/style/components/button.scss"; // 按需引入
 import "taro-ui/dist/style/components/article.scss";
@@ -44,7 +45,14 @@ export default () => {
       style={{ backgroundColor: getRoleParamArray(roleBgColor) }}
     >
       <View className="result_head">
-        <View className="home_icon" onClick={() => {}}>
+        <View
+          className="home_icon"
+          onClick={() => {
+            Taro.reLaunch({
+              url: "/pages/index/index",
+            });
+          }}
+        >
           <View className="at-icon at-icon-home"></View>
         </View>
         <View className="at-article__h2 title">性格类型</View>
