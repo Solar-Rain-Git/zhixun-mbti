@@ -571,3 +571,369 @@ import 'taro-ui/dist/style/index.scss' // 引入组件样式 - 方式一
 4）根据自己的需求，定制开发
 
 5）演示页面之间的跳转：页面跳转
+
+## 五、MBTI 算法实现
+
+### 1、评分模块实现
+
+#### 利用 CodeGeex 生成代码
+
+对于算法类代码，完全可以利用 AI 生成，国内可以使用 CodeGeex 智能编程助手。
+
+先安装 CodeGeex 插件，设置为中文，提问即可，描述清楚自己的问题很重要。
+
+推荐使用 Pro 模式，效果更好。
+
+##### AI Prompt
+
+请根据我下面的题目评分算法原理，帮我用 js 获取到得分最高的题目评分结果，要求算法清晰易懂，性能要求高，多补充一些注释。
+
+用户提交的答案 answerList: ["A"]
+
+题目列表 questions:
+
+```json
+[
+    {
+        "title": "你通常更喜欢",
+        "options": [
+            {
+                "result": "I",
+                "value": "独自工作",
+                "key": "A"
+            },
+            {
+                "result": "E",
+                "value": "与他人合作",
+                "key": "B"
+            }
+        ]
+    }
+]
+```
+
+题目评分结果 question_results：
+
+```json
+[
+  {
+    "resultProp": [
+      "I",
+      "S",
+      "T",
+      "J"
+    ],
+    "resultDesc": "忠诚可靠，被公认为务实，注重细节。",
+    "resultPicture": "icon_url_istj",
+    "resultName": "ISTJ（物流师）"
+  },
+]
+```
+
+评分原理：答案数组的每个元素和题目数组中每个元素的某个选项的key对应，从而获取到对应的 result 属性；题目评分结果的 resultProp 集合中如果包含该属性，就+1分，最后计算哪个评分结果（question_result）分数最高。
+
+##### AI 结果
+
+这个函数首先遍历题目列表和答案列表，统计每个选项的计数。然后遍历评分结果列表，计算每个评分结果的分数，最后返回最高分数和最高分数对应的评分结果。
+
+```javascript
+function getMaxScore(answerList, questions, question_results) {
+  // 初始化一个对象，用于存储每个选项的计数
+  const optionCount = {};
+
+  // 遍历题目列表
+  for (const question of questions) {
+    // 遍历答案列表
+    for (const answer of answerList) {
+      // 遍历题目中的选项
+      for (const option of question.options) {
+        // 如果答案和选项的key匹配
+        if (option.key === answer) {
+          // 获取选项的result属性
+          const result = option.result;
+
+          // 如果result属性不在optionCount中，初始化为0
+          if (!optionCount[result]) {
+            optionCount[result] = 0;
+          }
+
+          // 在optionCount中增加计数
+          optionCount[result]++;
+        }
+      }
+    }
+  }
+
+  // 初始化最高分数和最高分数对应的评分结果
+  let maxScore = 0;
+  let maxScoreResult = null;
+
+  // 遍历评分结果列表
+  for (const result of question_results) {
+    // 计算当前评分结果的分数
+    const score = result.resultProp.reduce((count, prop) => {
+      return count + (optionCount[prop] || 0);
+    }, 0);
+
+    // 如果分数高于当前最高分数，更新最高分数和最高分数对应的评分结果
+    if (score > maxScore) {
+      maxScore = score;
+      maxScoreResult = result;
+    }
+  }
+
+  // 返回最高分数和最高分数对应的评分结果
+  return maxScoreResult;
+}
+
+const answerList = ["A"];
+const questions = [
+  {
+    title: "你通常更喜欢",
+    options: [
+      {
+        result: "I",
+        value: "独自工作",
+        key: "A",
+      },
+      {
+        result: "E",
+        value: "与他人合作",
+        key: "B",
+      },
+    ],
+  },
+];
+const question_results = [
+  {
+    resultProp: ["I", "S", "T", "J"],
+    resultDesc: "忠诚可靠，被公认为务实，注重细节。",
+    resultPicture: "icon_url_istj",
+    resultName: "ISTJ（物流师）",
+  },
+];
+
+console.log(getMaxScore(answerList, questions, question_results));
+```
+
+效果图如下：
+
+![img](https://pic.yupi.icu/1285/1715050564270-378e86d9-81bf-4d39-9294-b2dcec6bdeb9.png)
+
+注意，AI 生成的结果可能是不稳定的，可以持续优化 prompt。
+
+#### 代码整合
+
+复制 AI 生成的代码，然后新建工具类，可以用 node 命令进行测试：
+
+![img](https://pic.yupi.icu/1285/1715050643426-78442bd9-c5b1-42e0-8ea0-af5485d8dd7f.png)
+
+略微修改部分内容（比如 maxScoreResult 默认值、增加注释），然后搞几个题目进行测试：
+
+```javascript
+/**
+ * 获取最佳题目评分结果
+ * @param answerList
+ * @param questions
+ * @param question_results
+ */
+function getBestQuestionResult(answerList, questions, question_results) {
+  // 初始化一个对象，用于存储每个选项的计数
+  const optionCount = {};
+
+  // 遍历题目列表
+  for (const question of questions) {
+    // 遍历答案列表
+    for (const answer of answerList) {
+      // 遍历题目中的选项
+      for (const option of question.options) {
+        // 如果答案和选项的key匹配
+        if (option.key === answer) {
+          // 获取选项的result属性
+          const result = option.result;
+
+          // 如果result属性不在optionCount中，初始化为0
+          if (!optionCount[result]) {
+            optionCount[result] = 0;
+          }
+
+          // 在optionCount中增加计数
+          optionCount[result]++;
+        }
+      }
+    }
+  }
+
+  // 初始化最高分数和最高分数对应的评分结果
+  let maxScore = 0;
+  let maxScoreResult = question_results[0];
+
+  // 遍历评分结果列表
+  for (const result of question_results) {
+    // 计算当前评分结果的分数
+    const score = result.resultProp.reduce((count, prop) => {
+      return count + (optionCount[prop] || 0);
+    }, 0);
+
+    // 如果分数高于当前最高分数，更新最高分数和最高分数对应的评分结果
+    if (score > maxScore) {
+      maxScore = score;
+      maxScoreResult = result;
+    }
+  }
+
+  // 返回最高分数和最高分数对应的评分结果
+  return maxScoreResult;
+}
+
+const answerList = ["B","B","B","A"];
+const questions = [
+  {
+    title: "你通常更喜欢",
+    options: [
+      {
+        result: "I",
+        value: "独自工作",
+        key: "A",
+      },
+      {
+        result: "E",
+        value: "与他人合作",
+        key: "B",
+      },
+    ],
+  },
+  {
+    options: [
+      {
+        result: "S",
+        value: "喜欢有结构和常规",
+        key: "A",
+      },
+      {
+        result: "N",
+        value: "喜欢自由和灵活性",
+        key: "B",
+      },
+    ],
+    title: "对于日常安排",
+  },
+  {
+    options: [
+      {
+        result: "P",
+        value: "首先考虑可能性",
+        key: "A",
+      },
+      {
+        result: "J",
+        value: "首先考虑后果",
+        key: "B",
+      },
+    ],
+    title: "当遇到问题时",
+  },
+  {
+    options: [
+      {
+        result: "T",
+        value: "时间是一种宝贵的资源",
+        key: "A",
+      },
+      {
+        result: "F",
+        value: "时间是相对灵活的概念",
+        key: "B",
+      },
+    ],
+    title: "你如何看待时间",
+  },
+];
+const question_results = [
+  {
+    resultProp: ["I", "S", "T", "J"],
+    resultDesc: "忠诚可靠，被公认为务实，注重细节。",
+    resultPicture: "icon_url_istj",
+    resultName: "ISTJ（物流师）",
+  },
+  {
+    resultProp: ["I", "S", "F", "J"],
+    resultDesc: "善良贴心，以同情心和责任为特点。",
+    resultPicture: "icon_url_isfj",
+    resultName: "ISFJ（守护者）",
+  },
+];
+
+console.log(getBestQuestionResult(answerList, questions, question_results));
+```
+
+需要导出函数：
+
+```javascript
+export function getBestQuestionResult(answerList, questions, question_results) {
+  ...
+}
+```
+
+### 2、页面间数据传递
+
+> 需求：题目结果页面需要得到做题页面用户选择的答案列表，才能进行评分。
+
+方法 1：url params
+
+https://taro-docs.jd.com/docs/apis/route/navigateTo
+
+比如：result?answerList=[A,B,C]
+
+方法 2：全局状态
+
+https://taro-docs.jd.com/docs/context#contextprovider
+
+方法 3：本地数据存储（推荐，较为简单）
+
+https://taro-docs.jd.com/docs/apis/storage/setStorageSync
+
+做题页面设置数据：
+
+```jsx
+<AtButton
+  type="primary"
+  size="normal"
+  className="controlBtn"
+  circle
+  disabled={!currentAnswer}
+  onClick={() => {
+    Taro.setStorageSync('answerList', answerList);
+    Taro.navigateTo({
+      url: "/pages/result/index",
+    });
+  }}
+>
+  查看结果
+</AtButton>
+复制代码
+```
+
+查看结果页面使用数据：
+
+```javascript
+let role = question_results[0];
+const answerList = Taro.getStorageSync("answerList");
+if (!answerList || answerList.length < 1) {
+  Taro.showToast({
+    title: '答案为空',
+    icon: 'error',
+    duration: 3000
+  })
+}
+
+role = getBestQuestionResult(answerList, questions, questionResults);
+```
+
+运行效果图：
+
+![img](https://pic.yupi.icu/1285/1715052072977-887a9f39-491f-4130-a17c-676bbb78b804.png)
+
+### 3、注意事项
+
+遇事不决 3 件套：清理工具缓存、重启项目、重启开发者工具。

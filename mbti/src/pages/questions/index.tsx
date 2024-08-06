@@ -20,6 +20,7 @@ import "taro-ui/dist/style/components/divider.scss";
 import "taro-ui/dist/style/components/badge.scss";
 import "./index.scss";
 import questions from "../../data/questions.json";
+import questionHeader from "../../assets/question-header.svg";
 
 export default () => {
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
@@ -42,18 +43,18 @@ export default () => {
   return (
     <View className="questionPage">
       <View className="questionPageHead">
-        <View className="tip_highlight">
-          <View className="tip">
-            <Image
-              className="tip_img"
-              mode="heightFix"
-              src="https://www.16personalities.com/static/images/test-header-2.svg"
-            ></Image>
-            <View className="at-article__h3 tip_text">
-              做你自己，诚实回答，找出你的性格。
-            </View>
+        {/*<View className="tip_highlight">*/}
+        <View className="tip">
+          <Image
+            className="tip_img"
+            mode="heightFix"
+            src={questionHeader}
+          ></Image>
+          <View className="at-article__h3 tip_text">
+            做你自己，诚实回答，找出你的性格。
           </View>
         </View>
+        {/*</View>*/}
       </View>
       <AtDivider content="问题选项" fontColor="#88619A" lineColor="#88619A" />
       <AtProgress
@@ -106,6 +107,7 @@ export default () => {
             className="control_btn btn_primary"
             disabled={progress !== 100}
             onClick={() => {
+              Taro.setStorageSync("answerList", answerList);
               Taro.redirectTo({
                 url: "/pages/result/index",
               });

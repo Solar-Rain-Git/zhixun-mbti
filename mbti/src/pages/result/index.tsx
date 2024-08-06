@@ -10,18 +10,28 @@ import "./index.scss";
 import GlobalFooter from "../../components/GlobalFooter";
 import logo from "../../assets/logo.svg";
 import question_results from "../../data/question_results.json";
+import { getBestQuestionResult } from "../../utils/bizUtils";
 
 export default () => {
   const [showModal, setShowModal] = useState(false);
-  const [role] = useState(question_results[0]);
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-
+  let role = question_results[0];
+  const answerList = Taro.getStorageSync("answerList");
+  if (!answerList || answerList.length < 1) {
+    Taro.showToast({
+      title: "请先完成测试",
+      icon: "error",
+      duration: 3000,
+    });
+  }
+  // @ts-ignore
+  role = getBestQuestionResult(answerList);
   // 使用 require.context 动态加载 SVG 图片
   const mbti_svgs = require.context("../../assets/mbti_svgs", false, /\.svg$/);
   // 获取图片路径
-  const getImagePath = (imageName) => {
+  const getImagePath = (imageName: string) => {
     try {
       return mbti_svgs(`./${imageName}.svg`);
     } catch (error) {
@@ -31,7 +41,7 @@ export default () => {
   };
 
   const roleCategories = ["analyst", "diplomat", "watchmen", "explorer"];
-  const roleCategory = ["分析家", "外交家", "守护者", "探索家"];
+  const roleCategoryName = ["分析家", "外交家", "守护者", "探索家"];
   const roleNameColor = ["#88619a", "#33a474", "#4298b4", "#e4ae3a"];
   const roleBgColor = ["#E7DFEA", "#D6ECE3", "#D9EAF0", "#F9EED7"];
   const getRoleParamArray = (paramArray: string[]): string => {
@@ -63,7 +73,7 @@ export default () => {
       <View className="container">
         <View className="roleInfo">
           <View className="roleCategory">
-            {getRoleParamArray(roleCategory)}
+            {getRoleParamArray(roleCategoryName)}
           </View>
           <Image
             src={getImagePath(role.resultPicture)}
@@ -83,11 +93,18 @@ export default () => {
       <AtModal isOpened={showModal} onClose={toggleModal}>
         <AtModalContent>
           <Image src={logo} className="login_logo" />
-          <View className="at-article__info login_info">
-            登陆后可继续当前操作
-          </View>
-          <AtButton type="primary" circle className="btn_primary">
-            微信手机号 一键登录
+          <View className="at-article__info login_info">点击再次测试</View>
+          <AtButton
+            type="primary"
+            circle
+            className="btn_primary"
+            onClick={() => {
+              Taro.reLaunch({
+                url: "/pages/questions/index",
+              });
+            }}
+          >
+            再测一次
           </AtButton>
         </AtModalContent>
       </AtModal>
