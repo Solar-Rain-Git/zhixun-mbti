@@ -1,6 +1,38 @@
 @import "../../app.scss";
 
 .questionPage {
+  .questionPageHead {
+    background-color: $sub-theme-color;
+    padding: 15rpx;
+
+    .tip_highlight {
+      margin-top: 15rpx;
+
+      .tip {
+        margin: 0 20rpx 15rpx;
+        padding: 15rpx;
+        display: flex;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 15rpx;
+        height: 100rpx;
+
+        .tip_img {
+          height: inherit;
+        }
+
+        .tip_text {
+          font-size: medium;
+          font-weight: bold;
+          line-height: 100rpx;
+        }
+      }
+    }
+  }
+
+  .progress {
+    padding: 0 20rpx 0;
+  }
+
   .title {
     padding-bottom: 15rpx;
   }
@@ -12,6 +44,46 @@
     .control_btn {
       width: 100%;
       margin: 20rpx;
+    }
+  }
+
+  .answer {
+    margin-top: 20rpx;
+    position: relative;
+    padding-left: 20rpx;
+    font-size: 28rpx;
+    line-height: 28rpx;
+  }
+
+  .answer::before {
+    content: "";
+    display: block;
+    height: 28rpx;
+    width: 10rpx;
+    background-color: $sub-theme-color;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .allAsk {
+    margin: 20rpx;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    .ask {
+      border-radius: 50%;
+      width: 120rpx;
+      height: 120rpx;
+      line-height: 120rpx;
+      padding: 0 20rpx;
+      margin: 10rpx;
+    }
+
+    .currentAsk {
+      background: $sub-theme-color;
+      color: $white;
     }
   }
 }

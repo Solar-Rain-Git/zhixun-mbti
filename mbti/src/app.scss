@@ -1,8 +1,9 @@
 $theme-color: #4298B4;
+$sub-theme-color: #88619A;
 $white: #fff;
 $logo: "../../assets/logo.svg";
 $bg: "../../assets/header-mountains-mobile.svg";
 .btn_primary {
   border: none;
-  background-color: #88619A;
+  background-color: $sub-theme-color;
 }

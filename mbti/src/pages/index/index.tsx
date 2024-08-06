@@ -19,7 +19,7 @@ export default () => {
   return (
     <View className="index_page">
       <View className="index_head">
-        <View className="index_logo"></View>
+        <Image src={logo} className="index_logo" mode="widthFix"></Image>
         <View className="index_icon" onClick={toggleModal}>
           <View className="at-icon at-icon-sketch"></View>
         </View>
