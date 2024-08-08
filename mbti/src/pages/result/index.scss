@@ -6,7 +6,7 @@
   .result_head {
     display: flex;
     justify-content: space-between;
-    padding: 0 0 20rpx 0;
+    padding: 0 20rpx;
     height: 70rpx;
 
     .title {
@@ -16,7 +16,7 @@
       font-weight: normal;
     }
 
-    .home_icon, .login_icon {
+    .login_icon {
       width: 100rpx;
       height: inherit;
       line-height: inherit;

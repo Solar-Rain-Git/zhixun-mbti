@@ -20,14 +20,16 @@ export default () => {
   let role = question_results[0];
   const answerList = Taro.getStorageSync("answerList");
   if (!answerList || answerList.length < 1) {
-    Taro.showToast({
-      title: "请先完成测试",
-      icon: "error",
-      duration: 3000,
-    });
+    role = {
+      roleCategory: "unknown",
+      resultProp: [],
+      resultDesc: "未检测答题数据,请回到主页进行性格测试",
+      resultPicture: "icon_url_unknown",
+      resultName: "神秘人",
+    };
+  } else {
+    role = getBestQuestionResult(answerList);
   }
-  // @ts-ignore
-  role = getBestQuestionResult(answerList);
   // 使用 require.context 动态加载 SVG 图片
   const mbti_svgs = require.context("../../assets/mbti_svgs", false, /\.svg$/);
   // 获取图片路径
@@ -40,10 +42,16 @@ export default () => {
     }
   };
 
-  const roleCategories = ["analyst", "diplomat", "watchmen", "explorer"];
-  const roleCategoryName = ["分析家", "外交家", "守护者", "探索家"];
-  const roleNameColor = ["#88619a", "#33a474", "#4298b4", "#e4ae3a"];
-  const roleBgColor = ["#E7DFEA", "#D6ECE3", "#D9EAF0", "#F9EED7"];
+  const roleCategories = [
+    "analyst",
+    "diplomat",
+    "watchmen",
+    "explorer",
+    "unknown",
+  ];
+  const roleCategoryName = ["分析家", "外交家", "守护者", "探索家", "神秘人"];
+  const roleNameColor = ["#88619a", "#33a474", "#4298b4", "#e4ae3a", "#EFF4FC"];
+  const roleBgColor = ["#E7DFEA", "#D6ECE3", "#D9EAF0", "#F9EED7", "#27294045"];
   const getRoleParamArray = (paramArray: string[]): string => {
     const index = roleCategories.indexOf(role.roleCategory);
     return index !== -1 ? paramArray[index] : "";
@@ -55,17 +63,7 @@ export default () => {
       style={{ backgroundColor: getRoleParamArray(roleBgColor) }}
     >
       <View className="result_head">
-        <View
-          className="home_icon"
-          onClick={() => {
-            Taro.reLaunch({
-              url: "/pages/index/index",
-            });
-          }}
-        >
-          <View className="at-icon at-icon-home"></View>
-        </View>
-        <View className="at-article__h2 title">性格类型</View>
+        <View className="at-article__h2 title">我的性格类型</View>
         <View className="login_icon" onClick={toggleModal}>
           <View className="at-icon at-icon-sketch"></View>
         </View>
@@ -89,7 +87,7 @@ export default () => {
           <View className="at-article__h3 desc">{role.resultDesc}</View>
         </View>
       </View>
-      <GlobalFooter />
+      <GlobalFooter hiddenTabBar />
       <AtModal isOpened={showModal} onClose={toggleModal}>
         <AtModalContent>
           <Image src={logo} className="login_logo" />
@@ -99,7 +97,7 @@ export default () => {
             circle
             className="btn_primary"
             onClick={() => {
-              Taro.reLaunch({
+              Taro.redirectTo({
                 url: "/pages/questions/index",
               });
             }}

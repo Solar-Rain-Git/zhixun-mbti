@@ -43,7 +43,6 @@ export default () => {
   return (
     <View className="questionPage">
       <View className="questionPageHead">
-        {/*<View className="tip_highlight">*/}
         <View className="tip">
           <Image
             className="tip_img"
@@ -54,7 +53,6 @@ export default () => {
             做你自己，诚实回答，找出你的性格。
           </View>
         </View>
-        {/*</View>*/}
       </View>
       <AtDivider content="问题选项" fontColor="#88619A" lineColor="#88619A" />
       <AtProgress
@@ -72,7 +70,7 @@ export default () => {
         onClick={(value) => {
           setCurrentAnswer(value);
           answerList[current - 1] = value;
-          !currentAnswer && setProgress(progress + 10);
+          !currentAnswer && setProgress(progress + 100 / questions.length);
         }}
       />
       <View className="do_btn">

@@ -42,7 +42,7 @@ export default () => {
           参加测试
         </AtButton>
       </View>
-      <GlobalFooter />
+      <GlobalFooter current={0} />
       <AtModal isOpened={showModal} onClose={toggleModal}>
         <AtModalContent>
           <Image src={logo} className="login_logo" />

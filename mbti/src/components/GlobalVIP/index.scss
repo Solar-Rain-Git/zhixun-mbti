@@ -1,0 +1,35 @@
+.vipInfo {
+  padding: 20rpx;
+  background: #6190E8;
+  border-radius: 20rpx;
+  color: #fff;
+  display: flex;
+  justify-content: space-around;
+
+  .title {
+    .mainTitle {
+      display: flex;
+      align-items: end;
+      font-size: large;
+      font-weight: bold;
+      padding: 10rpx;
+      vertical-align: bottom;
+    }
+
+    .subTitle {
+      padding: 10rpx;
+      font-size: x-small;
+      font-weight: lighter;
+    }
+  }
+
+
+  .price {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    font-size: x-large;
+    font-weight: bold;
+  }
+
+}

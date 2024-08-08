@@ -1,0 +1,18 @@
+@import "../../app.scss";
+
+.personalPage {
+  .person_head {
+    padding: 20rpx;
+    border-bottom: 20rpx solid #EDEDED;
+
+    .person_info {
+      padding: 0 20rpx 0 20rpx;
+    }
+  }
+
+  .share {
+    margin: 30rpx 20rpx;
+    background-color: #4298B4;
+    border-radius: 50rpx;
+  }
+}
