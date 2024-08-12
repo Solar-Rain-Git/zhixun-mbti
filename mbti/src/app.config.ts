@@ -5,6 +5,7 @@ export default defineAppConfig({
     "pages/result/index",
     "pages/personal/index",
     "pages/history/index",
+    "pages/updateUserInfo/index",
   ],
   tabBar: {
     list: [
@@ -21,7 +22,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: "light",
     navigationBarBackgroundColor: "#fff",
-    navigationBarTitleText: "Solar-MBTI 性格测试",
+    navigationBarTitleText: "智讯MBTI 性格测试",
     navigationBarTextStyle: "black",
   },
 });

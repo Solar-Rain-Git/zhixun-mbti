@@ -8,6 +8,7 @@ import "taro-ui/dist/style/components/divider.scss";
 import "./index.scss";
 import questions from "../../data/questions.json";
 import questionHeader from "../../assets/question-history.svg";
+import GlobalChart from "../../components/GlobalChart";
 
 export default () => {
   let answerList = Taro.getStorageSync("answerList");
@@ -34,6 +35,7 @@ export default () => {
         fontColor="#88619A"
         lineColor="#88619A"
       />
+      <GlobalChart />
       {questions.map((e, i) => (
         <View className="option" key={i}>
           <View className="at-article__h2 title" key={i}>

@@ -2,6 +2,7 @@ import { View, Image } from "@tarojs/components";
 import { AtButton, AtModal, AtModalContent } from "taro-ui";
 import Taro from "@tarojs/taro";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "taro-ui/dist/style/components/button.scss"; // 按需引入
 import "taro-ui/dist/style/components/article.scss";
 import "taro-ui/dist/style/components/icon.scss";
@@ -9,6 +10,8 @@ import "taro-ui/dist/style/components/modal.scss";
 import "./index.scss";
 import GlobalFooter from "../../components/GlobalFooter";
 import logo from "../../assets/logo.svg";
+import { userState } from "../../reduxStore/userStore/userType";
+import { login } from "../../reduxStore/userStore";
 
 export default () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +19,21 @@ export default () => {
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state: userState) => state.user.isLoggedIn);
+  const storageUserInfo = Taro.getStorageSync("userInfo");
+  if (storageUserInfo) {
+    const currentUser = {
+      avatar: "",
+      nickname: "",
+    };
+    for (const key in storageUserInfo) {
+      if (currentUser.hasOwnProperty(key)) {
+        currentUser[key] = storageUserInfo[key];
+      }
+    }
+    dispatch(login(currentUser));
+  }
   return (
     <View className="index_page">
       <View className="index_head">
@@ -34,9 +52,15 @@ export default () => {
           circle
           className="btn_primary btn_join"
           onClick={() => {
-            Taro.navigateTo({
-              url: "/pages/questions/index",
-            });
+            isLoggedIn
+              ? Taro.navigateTo({
+                  url: "/pages/questions/index",
+                })
+              : Taro.showToast({
+                  title: "请到我的页面填写用户信息",
+                  icon: "none",
+                  duration: 2000,
+                });
           }}
         >
           参加测试
@@ -46,9 +70,11 @@ export default () => {
       <AtModal isOpened={showModal} onClose={toggleModal}>
         <AtModalContent>
           <Image src={logo} className="login_logo" />
-          <View className="at-article__info login_info">登陆后可继续当前操作</View>
+          <View className="at-article__info login_info">
+            {isLoggedIn ? "快来测一测" : "请到我的页面填写用户信息"}
+          </View>
           <AtButton type="primary" circle className="btn_primary">
-            微信手机号 一键登录
+            {isLoggedIn ? "快来测一测" : "请到我的页面填写用户信息"}
           </AtButton>
         </AtModalContent>
       </AtModal>

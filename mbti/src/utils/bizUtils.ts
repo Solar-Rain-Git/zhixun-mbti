@@ -1,5 +1,6 @@
 import questions from "../data/questions.json";
 import question_results from "../data/question_results.json";
+import unknown from "../assets/mbti_svgs/icon_url_unknown.svg";
 
 /**
  * 获取最佳题目评分结果
@@ -53,3 +54,9 @@ export function getBestQuestionResult(answerList: string[]) {
   // 返回最高分数和最高分数对应的评分结果
   return maxScoreResult;
 }
+
+/**
+ * 未登录默认头像
+ * @param DefaultAvatar
+ */
+export const DefaultAvatar = unknown;

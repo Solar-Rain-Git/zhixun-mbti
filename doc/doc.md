@@ -937,3 +937,261 @@ role = getBestQuestionResult(answerList, questions, questionResults);
 ### 3、注意事项
 
 遇事不决 3 件套：清理工具缓存、重启项目、重启开发者工具。
+
+## 六、Redux状态管理
+
+> 通过用户状态示例，学会如何使用 Redux Toolkit 创建一个简单的用户登录状态管理系统，包括定义状态、创建切片、配置 store 以及在组件中使用 Redux 状态。通过 `createSlice` 和 `configureStore`，Redux Toolkit 极大地简化了 Redux 的使用，更加高效地管理应用程序状态。
+
+#### 1. 初始化项目
+
+首先，确保你已经安装了 `redux` 和 `@reduxjs/toolkit`：
+
+```bash
+npm install @reduxjs/toolkit react-redux
+```
+
+#### 2. 创建用户状态切片
+
+**定义用户状态 (`UserState`)：**
+
+我们需要管理用户的登录状态和基本信息（昵称和头像）。首先，定义用户状态的结构：
+
+```typescript
+interface UserState {
+  isLoggedIn: boolean;  // 表示用户是否已登录
+  userInfo: {
+    nickname: string;   // 用户的昵称
+    avatar: string;     // 用户的头像
+  } | null;  // 如果用户未登录，userInfo 为 null
+}
+```
+
+**设置初始状态：**
+
+我们需要一个初始状态，用来表示用户未登录时的状态：
+
+```
+typescript复制代码const initialState: UserState = {
+  isLoggedIn: false,   // 默认未登录
+  userInfo: null,      // 没有用户信息
+};
+```
+
+**创建用户状态切片 (`userSlice`)：**
+
+Redux Toolkit 提供了 `createSlice` 方法，可以简化 reducer 和 action 的创建。我们创建一个 `userSlice` 来管理用户状态，并定义两个 `reducer` 函数：`login` 和 `logout`。
+
+```typescript
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+const userSlice = createSlice({
+  name: 'userStore', // 切片名称，用于生成 action type
+  initialState,      // 初始状态
+  reducers: {
+    // 登录操作：更新 isLoggedIn 和 userInfo
+    login: (state, action: PayloadAction<{ nickname: string; avatar: string }>) => {
+      state.isLoggedIn = true;
+      state.userInfo = action.payload;
+    },
+    // 登出操作：重置 isLoggedIn 和 userInfo
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.userInfo = null;
+    },
+  },
+});
+
+// 导出生成的 action（登录和登出）
+export const { login, logout } = userSlice.actions;
+
+// 导出 reducer，用于配置 store
+export default userSlice.reducer;
+```
+
+**完整代码**
+
+```typescript
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface UserState {
+  isLoggedIn: boolean;
+  userInfo: {
+    nickname: string;
+    avatar: string;
+  } | null;
+}
+
+const initialState: UserState = {
+  isLoggedIn: false,
+  userInfo: null,
+};
+
+const userSlice = createSlice({
+  name: 'userStore',
+  initialState,
+  reducers: {
+    login: (state, action: PayloadAction<{ nickname: string; avatar: string }>) => {
+      state.isLoggedIn = true;
+      state.userInfo = action.payload;
+    },
+    logout: (state) => {
+      state.isLoggedIn = false;
+      state.userInfo = null;
+    },
+  },
+});
+
+export const { login, logout } = userSlice.actions;
+
+export default userSlice.reducer;
+```
+
+#### 3. 配置 Redux Store
+
+Redux 的核心是 store，它是所有状态的仓库。我们需要配置一个 Redux store，并将 `userSlice` 中的 reducer 添加进去。
+
+```typescript
+// store.ts
+import { configureStore } from '@reduxjs/toolkit';
+import userReducer from './userSlice';
+
+export const store = configureStore({
+  reducer: {
+    user: userReducer,  // 将 userReducer 添加到 store 中，管理 user 状态
+  },
+});
+
+// 定义 RootState 类型，用于获取整个状态树的类型
+export type RootState = ReturnType<typeof store.getState>;
+```
+
+#### 4. 将 store 提供给 React 应用
+
+最后，我们需要使用 `Provider` 将 Redux store 提供给 React 组件树中的所有组件。
+
+```react
+import { Component, PropsWithChildren } from "react";
+import { Provider } from "react-redux";
+import globalStore from "./reduxStore";
+import "./app.scss";
+
+class App extends Component<PropsWithChildren> {
+  componentDidMount() {}
+
+  componentDidShow() {}
+
+  componentDidHide() {}
+
+  // this.props.children 是将要会渲染的页面
+  render() {
+    return <Provider store={globalStore}>{this.props.children}</Provider>;
+  }
+}
+
+export default App;
+);
+```
+
+#### 5. 使用 Redux 状态
+
+接下来，我们将在组件中使用 `react-redux` 的 `useSelector` 和 `useDispatch` 钩子来访问和更新 Redux 状态。
+
+```tsx
+import { Button, Input, View } from "@tarojs/components";
+import { AtAvatar } from "taro-ui";
+import { useState, useEffect } from "react";
+import Taro from "@tarojs/taro";
+import "taro-ui/dist/style/components/icon.scss";
+import "taro-ui/dist/style/components/avatar.scss";
+import "taro-ui/dist/style/components/input.scss";
+import "taro-ui/dist/style/components/article.scss";
+import { DefaultAvatar } from "../../utils/bizUtils";
+import "./index.scss";
+//使用自定义的redux状态
+import { useSelector, useDispatch } from "react-redux";
+import { userState } from "../../reduxStore/userStore/userType";
+import { login } from "../../reduxStore/userStore";
+
+export default () => {
+  // 构造 action 
+  const dispatch = useDispatch();
+  // 获取  Redux store
+  const isLoggedIn = useSelector((state: userState) => state.user.isLoggedIn);
+  const currentUserInfo = useSelector(
+    (state: userState) => state.user.userInfo
+  );
+
+  const [avatar, setAvatar] = useState<string>(DefaultAvatar);
+  const [name, setName] = useState<string>("");
+
+  // 使用 useEffect 来同步当前用户信息到本地状态
+  useEffect(() => {
+    if (isLoggedIn && currentUserInfo) {
+      setAvatar(currentUserInfo.avatar);
+      setName(currentUserInfo.nickname);
+    }
+  }, [isLoggedIn, currentUserInfo]);
+
+  // 处理选择头像的事件
+  const handleChooseAvatar = (e) => {
+    const { avatarUrl } = e.detail;
+    setAvatar(avatarUrl);
+  };
+
+  // 处理昵称输入框失焦事件
+  const handleNameBlur = (e) => {
+    const { value } = e.detail;
+    setName(value);
+  };
+
+  // 保存按钮点击事件处理
+  const handleSave = () => {
+    const isEmpty = (value: string | null) =>
+      value === null || value.trim() === "";
+    if (isEmpty(avatar) || isEmpty(name)) {
+      Taro.showToast({
+        title: "请录入完整的昵称和头像",
+        icon: "none",
+        duration: 2000,
+      });
+      return;
+    }
+    // 更新用户信息到 Redux store
+    dispatch(login({ avatar: avatar, nickname: name }));
+    Taro.setStorageSync("userInfo", { avatar: avatar, nickname: name });
+    Taro.showToast({
+      title: "保存成功",
+      icon: "success",
+      duration: 2000,
+    });
+  };
+
+  return (
+    <View className="updatePersonalPage">
+      <View className="avatar">
+        <Button
+          className="avatar-wrapper"
+          openType="chooseAvatar"
+          onChooseAvatar={handleChooseAvatar}
+        >
+          <AtAvatar size="large" image={avatar} />
+        </Button>
+        <View className="at-article__info avatarInfo">点击修改头像</View>
+      </View>
+      <View className="nickInput">
+        <View className="nickInfo">昵称</View>
+        <Input
+          type="nickname"
+          className="input"
+          placeholder="请输入昵称"
+          value={name}
+          onBlur={handleNameBlur}
+        />
+      </View>
+      <Button type="primary" className="save" onClick={handleSave}>
+        保存
+      </Button>
+    </View>
+  );
+};
+```
